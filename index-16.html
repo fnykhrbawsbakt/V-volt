@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1"/>
+<title>دور الفنيين</title>
+<meta name="robots" content="noindex, nofollow"/>
+
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#0b0a0d"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="دور الفنيين"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" href="icon-192.png"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#0b0a0d; --black2:#111014; --card-bg:#16151a; --card-bg2:#1c1b21; --border:#28262e;
+    --gold:#D4AF37; --gold-light:#f2cd5c; --gold-dim:#8a7226;
+    --spark:#ff8a3d; --spark-dim:rgba(255,138,61,0.15);
+    --ivory:#f5f1e8; --gray:#8a8792; --gray-light:#c9c6d0;
+    --green:#3ecf6a; --red:#e2564f;
+    --font-main:'Cairo',sans-serif; --font-body:'Tajawal',sans-serif;
+    --radius:16px; --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0; -webkit-tap-highlight-color:transparent}
+  html{background:var(--black)}
+  body{
+    font-family:var(--font-body); background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(212,175,55,0.09), transparent 60%),
+      var(--black);
+    color:var(--ivory); min-height:100vh; line-height:1.6;
+    padding:calc(18px + env(safe-area-inset-top)) 14px calc(92px + env(safe-area-inset-bottom));
+    overflow-x:hidden;
+  }
+  .wrap{max-width:640px;margin:0 auto}
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important} }
+
+  header{text-align:center;margin-bottom:16px; animation: dropIn .5s var(--ease) both}
+  .brand{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px}
+  .brand .bolt{width:22px;height:22px;flex-shrink:0}
+  header h1{font-family:var(--font-main);font-weight:900;font-size:1.4rem;color:var(--gold);letter-spacing:.2px}
+  .live-row{display:flex;align-items:center;justify-content:center;gap:6px;color:var(--gray);font-size:0.78rem;margin-top:4px}
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(62,207,106,.6);animation:pulseDot 2s infinite}
+  @keyframes pulseDot{0%{box-shadow:0 0 0 0 rgba(62,207,106,.55)}70%{box-shadow:0 0 0 8px rgba(62,207,106,0)}100%{box-shadow:0 0 0 0 rgba(62,207,106,0)}}
+  @keyframes dropIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+  .notice{background:linear-gradient(135deg, rgba(212,175,55,0.10), rgba(212,175,55,0.03));border:1px solid rgba(212,175,55,0.22);color:var(--gray-light);font-size:0.76rem;padding:10px 14px;border-radius:12px;margin-bottom:16px;text-align:center; animation: fadeUp .5s var(--ease) .05s both}
+
+  .spark-line{position:relative;height:2px;border-radius:2px;background:var(--border);overflow:hidden;margin-bottom:16px}
+  .spark-line::after{
+    content:"";position:absolute;top:0;right:-30%;width:30%;height:100%;
+    background:linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+    animation: sparkTravel 2.8s ease-in-out infinite;
+  }
+  @keyframes sparkTravel{0%{right:-30%}100%{right:100%}}
+
+  .panel{display:none; animation: fadeUp .35s var(--ease) both}
+  .panel.active{display:block}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  .card{background:linear-gradient(180deg, var(--card-bg2), var(--card-bg)); border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:16px; box-shadow:0 8px 24px -12px rgba(0,0,0,0.5)}
+  .card h2{font-family:var(--font-main); font-size:1.02rem; font-weight:800; color:var(--ivory); margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .badge-count{background:rgba(212,175,55,0.14); color:var(--gold); font-size:0.74rem; padding:3px 11px; border-radius:20px; font-family:var(--font-main); font-weight:800; font-variant-numeric:tabular-nums;}
+
+  .queue-item{position:relative; display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--black2); border:1px solid var(--border); border-radius:13px; padding:13px 15px; margin-bottom:9px; transition:transform .25s var(--ease), border-color .25s;}
+  .queue-item.next{
+    border-color:rgba(212,175,55,0.55);
+    background:linear-gradient(135deg, rgba(212,175,55,0.10), var(--black2) 60%);
+    box-shadow:0 0 0 1px rgba(212,175,55,0.25), 0 0 26px -6px rgba(212,175,55,0.35);
+    animation: nextGlow 2.6s ease-in-out infinite;
+  }
+  @keyframes nextGlow{
+    0%,100%{box-shadow:0 0 0 1px rgba(212,175,55,0.25), 0 0 26px -6px rgba(212,175,55,0.35)}
+    50%{box-shadow:0 0 0 1px rgba(212,175,55,0.5), 0 0 34px -4px rgba(212,175,55,0.55)}
+  }
+  .queue-item.mine-item{border-color:rgba(62,207,106,0.5)}
+  .qi-info{display:flex;align-items:center;gap:11px;min-width:0}
+  .qi-pos{width:30px;height:30px;border-radius:9px;background:var(--border);color:var(--gray-light); display:flex;align-items:center;justify-content:center;font-family:var(--font-main); font-weight:800;font-size:0.85rem;flex-shrink:0;}
+  .next .qi-pos{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#241c02}
+  .qi-text{min-width:0}
+  .qi-name{font-weight:700;font-size:0.98rem;color:var(--ivory);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .qi-you{color:var(--green);font-size:0.7rem;font-weight:800;margin-right:4px}
+  .qi-role{font-size:0.76rem;color:var(--gray)}
+  .qi-since{font-size:0.72rem;color:var(--spark);margin-top:2px;font-weight:700}
+  .qi-reason{font-size:0.72rem;color:var(--gray-light);margin-top:2px;font-style:italic}
+
+  button.act{font-family:var(--font-main); font-weight:800; font-size:0.8rem; border:none; border-radius:10px; padding:10px 13px; cursor:pointer; white-space:nowrap; transition:transform .15s var(--ease), filter .15s; flex-shrink:0;}
+  button.act:active{transform:scale(0.93)}
+  button.act:disabled{opacity:0.35;cursor:not-allowed}
+  .btn-take{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#241c02; box-shadow:0 4px 14px -4px rgba(212,175,55,0.5)}
+  .btn-leave{background:var(--spark-dim);color:var(--spark);border:1px solid rgba(255,138,61,0.35)}
+  .btn-back{background:linear-gradient(135deg,var(--green),#2fae56);color:#04220e; box-shadow:0 4px 14px -4px rgba(62,207,106,0.4)}
+  .btn-del{background:transparent;color:var(--red);border:1px solid rgba(226,86,79,0.35);font-size:0.75rem;padding:7px 10px}
+
+  .empty-state{color:var(--gray);font-size:0.85rem;text-align:center;padding:26px 10px}
+  .empty-state .es-icon{font-size:1.8rem;display:block;margin-bottom:8px;opacity:.6}
+
+  details summary{cursor:pointer; font-family:var(--font-main); font-weight:700; color:var(--gray-light); font-size:0.9rem; list-style:none; display:flex; align-items:center; gap:6px;}
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{content:"›";transform:rotate(0deg);transition:transform .2s;display:inline-block;font-size:1.1rem;color:var(--gold)}
+  details[open] summary::before{transform:rotate(90deg)}
+  .admin-body{margin-top:16px}
+  .add-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .add-row input, .add-row select{flex:1; min-width:110px; background:var(--black2); border:1px solid var(--border); color:var(--ivory); padding:11px 12px; border-radius:10px; font-family:var(--font-body); font-size:0.9rem;}
+  .add-row input:focus, .add-row select:focus{outline:2px solid var(--gold); outline-offset:1px}
+  .add-row button{background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:#241c02; border:none; padding:11px 18px; border-radius:10px; font-family:var(--font-main); font-weight:800; cursor:pointer;}
+  .worker-row{display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.9rem; gap:8px; flex-wrap:wrap}
+  .worker-row:last-child{border-bottom:none}
+  .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:6px}
+  .dot-green{background:var(--green)} .dot-orange{background:var(--spark)}
+  .toast{position:fixed; bottom:86px; left:50%; transform:translateX(-50%) translateY(16px); background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:#241c02; font-family:var(--font-main); font-weight:800; padding:11px 22px; border-radius:30px; font-size:0.85rem; opacity:0; transition:.35s var(--ease); pointer-events:none; z-index:999; white-space:nowrap; box-shadow:0 10px 30px -8px rgba(212,175,55,0.6)}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  .toast.err{background:linear-gradient(135deg,#e2564f,#c73a33);color:#fff; box-shadow:0 10px 30px -8px rgba(226,86,79,0.6)}
+
+  .stat-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.88rem}
+  .stat-row:last-child{border-bottom:none}
+  .stat-nums{display:flex;gap:14px;font-family:var(--font-main);font-weight:800;font-variant-numeric:tabular-nums}
+  .stat-nums span.n-take{color:var(--gold)}
+  .stat-nums span.n-leave{color:var(--spark)}
+  .log-item{padding:9px 0;border-bottom:1px solid var(--border);font-size:0.82rem;color:var(--gray-light)}
+  .log-item:last-child{border-bottom:none}
+  .log-time{color:var(--gray);font-size:0.72rem;font-variant-numeric:tabular-nums}
+  .log-tag{font-family:var(--font-main);font-weight:800;padding:2px 9px;border-radius:7px;font-size:0.68rem;margin-left:6px}
+  .tag-took{background:rgba(212,175,55,0.15);color:var(--gold)}
+  .tag-left{background:var(--spark-dim);color:var(--spark)}
+  .tag-returned{background:rgba(62,207,106,0.15);color:var(--green)}
+  .tag-add{background:rgba(255,255,255,0.06);color:var(--gray-light)}
+  .tag-remove{background:rgba(226,86,79,0.15);color:var(--red)}
+
+  .convo-chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--border)}
+  .convo-chips::-webkit-scrollbar{display:none}
+  .convo-chip{flex-shrink:0;display:flex;align-items:center;gap:5px;background:var(--black2);border:1px solid var(--border);color:var(--gray-light);padding:7px 13px;border-radius:20px;font-size:0.8rem;font-weight:700;cursor:pointer;position:relative;white-space:nowrap;transition:.15s}
+  .convo-chip.active{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#241c02;border-color:transparent}
+  .convo-chip .cc-dot{width:6px;height:6px;border-radius:50%;background:var(--spark);position:absolute;top:2px;left:6px;display:none}
+  .convo-chip .cc-dot.show{display:block}
+
+  .chat-box{max-height:52vh;overflow-y:auto;display:flex;flex-direction:column;gap:9px;margin-bottom:14px;padding:2px 2px 2px 4px}
+  .chat-msg{background:var(--black2);border:1px solid var(--border);border-radius:13px;padding:9px 13px;max-width:78%; animation: msgIn .3s var(--ease) both; align-self:flex-start; border-bottom-right-radius:4px}
+  .chat-msg.mine{background:linear-gradient(135deg, rgba(212,175,55,0.22), rgba(212,175,55,0.10)); border-color:rgba(212,175,55,0.35); align-self:flex-end; border-bottom-right-radius:13px; border-bottom-left-radius:4px}
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .chat-msg .cm-name{font-family:var(--font-main);font-weight:800;font-size:0.76rem;color:var(--gold)}
+  .chat-msg.mine .cm-name{display:none}
+  .chat-msg .cm-text{font-size:0.9rem;color:var(--ivory);margin-top:3px;word-wrap:break-word}
+  .chat-msg .cm-time{font-size:0.66rem;color:var(--gray);margin-top:4px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:4px}
+  .chat-msg.mine .cm-time{justify-content:flex-end}
+  .cm-tick{color:var(--gold-light);font-size:0.75rem}
+  .chat-input-row{display:flex;gap:8px;flex-wrap:wrap}
+  .chat-input-row input{flex:1;min-width:120px;background:var(--black2); border:1px solid var(--border); color:var(--ivory); padding:11px 13px; border-radius:10px; font-family:var(--font-body); font-size:0.9rem;}
+  .chat-input-row input:focus{outline:2px solid var(--gold); outline-offset:1px}
+  .chat-input-row button{background:linear-gradient(135deg,var(--gold),var(--gold-light)); color:#241c02; border:none; padding:11px 18px; border-radius:10px; font-family:var(--font-main); font-weight:800; cursor:pointer;}
+
+  .cm-reactions{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+  .react-btn{background:var(--card-bg2);border:1px solid var(--border);border-radius:20px;padding:2px 8px;font-size:0.72rem;color:var(--gray-light);cursor:pointer;display:flex;align-items:center;gap:3px;transition:transform .12s, border-color .15s}
+  .react-btn:active{transform:scale(0.88)}
+  .react-btn.has-count{border-color:rgba(212,175,55,0.4);background:rgba(212,175,55,0.08);color:var(--gold-light)}
+  .react-pick{display:flex;gap:4px;margin-top:6px;opacity:0;max-height:0;overflow:hidden;transition:.2s var(--ease)}
+  .react-pick.open{opacity:1;max-height:40px}
+  .react-pick button{background:var(--card-bg2);border:1px solid var(--border);border-radius:10px;font-size:1rem;padding:3px 7px;cursor:pointer}
+  .react-pick button:active{transform:scale(0.85)}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(3px);z-index:200;display:none;align-items:flex-end;justify-content:center}
+  .modal-overlay.open{display:flex}
+  .modal-sheet{width:100%;max-width:640px;background:var(--card-bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));animation:sheetUp .3s var(--ease) both}
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  .modal-sheet h3{font-family:var(--font-main);color:var(--gold);font-size:1.05rem;margin-bottom:14px;text-align:center}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip{background:var(--black2);border:1px solid var(--border);color:var(--gray-light);padding:9px 14px;border-radius:20px;font-size:0.85rem;cursor:pointer;transition:.15s}
+  .chip.selected{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#241c02;border-color:transparent;font-weight:800}
+  .modal-sheet input{width:100%;background:var(--black2);border:1px solid var(--border);color:var(--ivory);padding:12px 14px;border-radius:10px;font-family:var(--font-body);font-size:0.9rem;margin-bottom:16px}
+  .modal-actions{display:flex;gap:10px}
+  .modal-actions button{flex:1;padding:12px;border-radius:10px;border:none;font-family:var(--font-main);font-weight:800;cursor:pointer;font-size:0.9rem}
+  .modal-cancel{background:var(--black2);color:var(--gray-light);border:1px solid var(--border) !important}
+  .modal-confirm{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#241c02}
+
+  .confetti-piece{position:fixed;top:-10px;z-index:300;border-radius:2px;pointer-events:none;animation:confettiFall linear forwards}
+  @keyframes confettiFall{to{transform:translateY(105vh) rotate(540deg);opacity:0}}
+
+  .tabbar{
+    position:fixed; bottom:0; left:0; right:0; z-index:50;
+    display:flex; justify-content:space-around; align-items:center;
+    background:rgba(17,16,20,0.88); backdrop-filter:blur(16px) saturate(140%); -webkit-backdrop-filter:blur(16px) saturate(140%);
+    border-top:1px solid var(--border);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+  }
+  .tab-btn{
+    background:none;border:none;color:var(--gray);display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-family:var(--font-main);font-weight:700;font-size:0.66rem;padding:6px 14px;border-radius:12px;cursor:pointer;
+    transition:color .2s, transform .15s; position:relative;
+  }
+  .tab-btn .tab-icon{font-size:1.25rem;transition:transform .25s var(--ease)}
+  .tab-btn.active{color:var(--gold)}
+  .tab-btn.active .tab-icon{transform:translateY(-2px) scale(1.08)}
+  .tab-btn:active{transform:scale(0.9)}
+  .tab-dot{position:absolute;top:2px;left:50%;transform:translateX(14px);width:6px;height:6px;border-radius:50%;background:var(--spark);opacity:0;transition:opacity .2s}
+  .tab-dot.show{opacity:1}
+
+  #loginScreen{position:fixed;inset:0;background:var(--black);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+  #loginScreen.hidden{display:none}
+  .login-card{width:100%;max-width:380px;background:var(--card-bg2);border:1px solid var(--border);border-radius:20px;padding:28px 24px;text-align:center}
+  .login-card .bolt{width:44px;height:44px;margin-bottom:10px}
+  .login-card h1{font-family:var(--font-main);color:var(--gold);font-size:1.3rem;margin-bottom:4px}
+  .login-card p{color:var(--gray);font-size:0.82rem;margin-bottom:22px}
+  .login-card input{width:100%;background:var(--black2);border:1px solid var(--border);color:var(--ivory);padding:13px 14px;border-radius:12px;font-family:var(--font-body);font-size:0.95rem;margin-bottom:12px;text-align:center}
+  .login-card input:focus{outline:2px solid var(--gold);outline-offset:1px}
+  .login-card button{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#241c02;border:none;padding:14px;border-radius:12px;font-family:var(--font-main);font-weight:800;font-size:0.95rem;cursor:pointer;margin-top:6px}
+  .login-card button:active{transform:scale(0.97)}
+  .login-err{color:var(--red);font-size:0.82rem;margin-top:12px;min-height:18px}
+  #appRoot.hidden{display:none}
+
+  .logout-row{display:flex;justify-content:center;margin-top:8px}
+  .logout-btn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:9px 18px;border-radius:10px;font-family:var(--font-main);font-weight:700;font-size:0.78rem;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <svg class="bolt" style="margin:0 auto 10px" viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="url(#g2)"/><defs><linearGradient id="g2" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#f2cd5c"/><stop offset="1" stop-color="#D4AF37"/></linearGradient></defs></svg>
+    <h1>دور الفنيين</h1>
+    <p>سجّل دخولك برقم جوالك — التطبيق هيفتكرك بعد كده</p>
+    <input type="tel" id="loginPhone" placeholder="رقم الجوال" inputmode="numeric"/>
+    <input type="password" id="loginPassword" placeholder="كلمة المرور" inputmode="numeric"/>
+    <button onclick="doLogin()">دخول</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<div id="appRoot" class="hidden">
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg class="bolt" viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z" fill="url(#g)"/><defs><linearGradient id="g" x1="4" y1="2" x2="20" y2="22"><stop stop-color="#f2cd5c"/><stop offset="1" stop-color="#D4AF37"/></linearGradient></defs></svg>
+      <h1>دور الفنيين</h1>
+    </div>
+    <div class="live-row"><span class="live-dot"></span> مرحبًا <span id="myNameLabel" style="color:var(--gold-light);font-weight:700">-</span></div>
+  </header>
+
+  <div class="notice">⚠️ كل حركة هنا متسجلة بالاسم والوقت والسبب، ومتراجعة يوميًا.</div>
+  <div class="spark-line"></div>
+
+  <section class="panel active" id="panel-queue">
+    <div class="card">
+      <h2>🔔 الدور الحالي <span class="badge-count" id="countInQueue">0</span></h2>
+      <div id="queueList"></div>
+    </div>
+    <div class="card">
+      <h2>🔧 مشغول بزبون حاليًا <span class="badge-count" id="countBusy">0</span></h2>
+      <div id="busyList"></div>
+    </div>
+    <div class="card">
+      <h2>🚗 خارج المحل حاليًا <span class="badge-count" id="countAway">0</span></h2>
+      <div id="awayList"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-chat">
+    <div class="card">
+      <h2>💬 الدردشة</h2>
+      <div class="convo-chips" id="convoChips"></div>
+      <div class="chat-box" id="chatBox"></div>
+      <div class="chat-input-row">
+        <input type="text" id="chatText" placeholder="اكتب رسالة..." maxlength="500"/>
+        <button onclick="sendChat()">إرسال</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-stats">
+    <div class="card">
+      <h2>📊 إحصائية اليوم</h2>
+      <div id="statsList"></div>
+    </div>
+    <div class="card">
+      <details open>
+        <summary>سجل الحركة (بتوقيت السيرفر)</summary>
+        <div class="admin-body" id="logList"></div>
+      </details>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-admin">
+    <div class="card">
+      <h2>⚙️ إدارة الفريق</h2>
+      <div class="add-row">
+        <input type="text" id="newName" placeholder="اسم الفني"/>
+        <select id="newRole">
+          <option value="كهربائي">كهربائي</option>
+          <option value="سباك">سباك</option>
+          <option value="عام">فني عام</option>
+        </select>
+      </div>
+      <div class="add-row">
+        <input type="tel" id="newPhone" placeholder="رقم جوال الفني" inputmode="numeric"/>
+        <button onclick="addWorker()">إضافة</button>
+      </div>
+      <p style="color:var(--gray);font-size:0.75rem;margin-bottom:6px">هيتولد كلمة مرور تلقائي — سجّلها وابلّغ الفني بيها عشان يسجل دخول بيها أول مرة على جواله.</p>
+      <div id="workersManageList"></div>
+      <div class="logout-row">
+        <button class="logout-btn" onclick="doLogout()">🚪 تسجيل الخروج من الجهاز ده</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="reasonModal">
+  <div class="modal-sheet">
+    <h3>🚗 سبب الخروج</h3>
+    <div class="chip-row" id="reasonChips">
+      <button class="chip" data-val="عميل قديم">عميل قديم</button>
+      <button class="chip" data-val="صيانة طارئة">صيانة طارئة</button>
+      <button class="chip" data-val="توصيل مواد">توصيل مواد</button>
+      <button class="chip" data-val="غرض شخصي">غرض شخصي</button>
+    </div>
+    <input type="text" id="reasonCustomInput" placeholder="أو اكتب سبب مختلف..."/>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeReasonModal()">إلغاء</button>
+      <button class="modal-confirm" onclick="confirmReasonModal()">متابعة</button>
+    </div>
+  </div>
+</div>
+
+<nav class="tabbar">
+  <button class="tab-btn active" data-tab="queue" onclick="switchTab('queue')">
+    <span class="tab-icon">🔔</span>الدور
+  </button>
+  <button class="tab-btn" data-tab="chat" onclick="switchTab('chat')">
+    <span class="tab-icon">💬</span>الدردشة<span class="tab-dot" id="chatDot"></span>
+  </button>
+  <button class="tab-btn" data-tab="stats" onclick="switchTab('stats')">
+    <span class="tab-icon">📊</span>الإحصائيات
+  </button>
+  <button class="tab-btn" data-tab="admin" onclick="switchTab('admin')">
+    <span class="tab-icon">⚙️</span>الإدارة
+  </button>
+</nav>
+</div>
+
+<script>
+const API = "/api/queue";
+const ACTION_API = "/api/queue/action";
+let state = { workers: {}, order: [], away: [], busy: [], log: [], chat: [], dms: {} };
+let busy = false;
+let currentTab = 'queue';
+let currentConvo = 'group';
+let seenCounts = {};
+let session = null;
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+function haptic(ms){
+  if(navigator.vibrate){ try{ navigator.vibrate(ms || 15); }catch(e){} }
+}
+function confettiBurst(){
+  const colors = ['#D4AF37','#f2cd5c','#3ecf6a','#ff8a3d'];
+  for(let i=0;i<26;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const size = 6 + Math.random()*6;
+    el.style.width = size+'px';
+    el.style.height = (size*0.4)+'px';
+    el.style.left = (Math.random()*100)+'vw';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDuration = (1.4 + Math.random()*1.1)+'s';
+    el.style.opacity = String(0.8 + Math.random()*0.2);
+    document.body.appendChild(el);
+    setTimeout(()=> el.remove(), 2700);
+  }
+}
+function showToast(msg, isErr){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('err', !!isErr);
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+function loadSession(){
+  try{
+    const raw = localStorage.getItem('fq_session');
+    if(raw) session = JSON.parse(raw);
+  }catch(e){ session = null; }
+}
+function saveSession(){
+  localStorage.setItem('fq_session', JSON.stringify(session));
+}
+function clearSession(){
+  localStorage.removeItem('fq_session');
+  session = null;
+}
+
+async function doLogin(){
+  const phone = document.getElementById('loginPhone').value.trim();
+  const password = document.getElementById('loginPassword').value.trim();
+  const errBox = document.getElementById('loginErr');
+  errBox.textContent = '';
+  if(!phone || !password){ errBox.textContent = 'اكتب رقم الجوال وكلمة المرور'; return; }
+  try{
+    const res = await fetch(API + '/login', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ phone, password })
+    });
+    const data = await res.json();
+    if(!data.ok){ errBox.textContent = data.error || 'حصل خطأ'; haptic(30); return; }
+    session = { token: data.token, workerId: data.workerId, name: data.name, role: data.role };
+    saveSession();
+    showLoggedInApp();
+    loadState();
+  }catch(e){
+    errBox.textContent = 'فشل الاتصال بالسيرفر';
+  }
+}
+
+async function doLogout(){
+  if(!confirm('هل تريد تسجيل الخروج من هذا الجهاز؟')) return;
+  try{
+    await fetch(API + '/logout', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ token: session ? session.token : null })
+    });
+  }catch(e){}
+  clearSession();
+  location.reload();
+}
+
+function showLoggedInApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appRoot').classList.remove('hidden');
+  document.getElementById('myNameLabel').textContent = session.name;
+}
+
+async function loadState(){
+  try{
+    const res = await fetch(API, { cache: "no-store" });
+    const data = await res.json();
+    state = data;
+    render();
+  }catch(e){ console.error("فشل تحميل الدور", e); }
+}
+
+async function doAction(payload){
+  busy = true;
+  try{
+    const res = await fetch(ACTION_API, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(Object.assign({}, payload, { token: session ? session.token : null }))
+    });
+    const data = await res.json();
+    if(!data.ok){
+      if(data.needLogin){ clearSession(); location.reload(); return false; }
+      showToast(data.error || "حصل خطأ", true);
+      busy = false;
+      return false;
+    }
+    state = data.state;
+    render();
+    busy = false;
+    return true;
+  }catch(e){
+    console.error(e);
+    showToast("فشل الاتصال بالسيرفر", true);
+    busy = false;
+    return false;
+  }
+}
+
+async function doAdminAction(payload){
+  try{
+    const res = await fetch(ACTION_API, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!data.ok){ showToast(data.error || "حصل خطأ", true); return null; }
+    state = data.state;
+    render();
+    return data;
+  }catch(e){
+    showToast("فشل الاتصال بالسيرفر", true);
+    return null;
+  }
+}
+
+function timeAgo(iso){
+  const diffMin = Math.max(0, Math.round((Date.now() - new Date(iso).getTime())/60000));
+  if (diffMin < 1) return "الآن";
+  if (diffMin < 60) return `منذ ${diffMin} دقيقة`;
+  const h = Math.floor(diffMin/60), m = diffMin%60;
+  return `منذ ${h} ساعة${m ? ' و'+m+' د' : ''}`;
+}
+function fmtTime(iso){
+  return new Date(iso).toLocaleTimeString('ar-SA', { hour:'2-digit', minute:'2-digit' });
+}
+function isToday(iso){
+  return new Date(iso).toDateString() === new Date().toDateString();
+}
+
+const ACTION_LABELS = {
+  took: { text: "بدأ الشغل مع زبون من الدور", tag: "tag-took" },
+  finished: { text: "خلص ورجع للدور", tag: "tag-returned" },
+  left: { text: "خرج لعميله الخاص", tag: "tag-left" },
+  returned: { text: "رجع متاح للدور", tag: "tag-returned" },
+  add: { text: "انضم للفريق", tag: "tag-add" },
+  remove: { text: "اتشال من الفريق", tag: "tag-remove" },
+  reset_password: { text: "اتعمله كلمة مرور جديدة", tag: "tag-add" },
+};
+
+function switchTab(name){
+  haptic(10);
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+  currentTab = name;
+  if(name === 'chat'){
+    document.getElementById('chatDot').classList.remove('show');
+    render();
+  }
+}
+
+function setConvo(id){
+  haptic(10);
+  currentConvo = id;
+  render();
+}
+
+function render(){
+  if(!session) return;
+  const myId = session.workerId;
+
+  const queueList = document.getElementById('queueList');
+  document.getElementById('countInQueue').textContent = state.order.length;
+  if(state.order.length === 0){
+    queueList.innerHTML = `<div class="empty-state"><span class="es-icon">🔌</span>مفيش فنيين في الدور دلوقتي.</div>`;
+  } else {
+    queueList.innerHTML = state.order.map((id, idx) => {
+      const w = state.workers[id];
+      if(!w) return '';
+      const isNext = idx === 0;
+      const isMine = id === myId;
+      return `
+        <div class="queue-item ${isNext ? 'next' : ''} ${isMine ? 'mine-item' : ''}">
+          <div class="qi-info">
+            <div class="qi-pos">${idx+1}</div>
+            <div class="qi-text">
+              <div class="qi-name">${escapeHtml(w.name)}${isMine ? '<span class="qi-you">(انت)</span>' : ''}</div>
+              <div class="qi-role">${escapeHtml(w.role)}</div>
+            </div>
+          </div>
+          ${isNext
+            ? `<button class="act btn-take" onclick="takeCustomer()" ${!isMine ? 'disabled title="لسه مش دورك"' : ''}>✅ أخذ الزبون</button>`
+            : (isMine ? `<button class="act btn-leave" onclick="leaveForPersonal()">🚗 خرج لعميله</button>` : '')
+          }
+        </div>`;
+    }).join('');
+  }
+
+  const busyList = document.getElementById('busyList');
+  const busyArr = state.busy || [];
+  document.getElementById('countBusy').textContent = busyArr.length;
+  if(busyArr.length === 0){
+    busyList.innerHTML = `<div class="empty-state"><span class="es-icon">🔧</span>مفيش حد مشغول دلوقتي</div>`;
+  } else {
+    busyList.innerHTML = busyArr.map(b => {
+      const w = state.workers[b.id];
+      if(!w) return '';
+      const isMine = b.id === myId;
+      return `
+        <div class="queue-item ${isMine ? 'mine-item' : ''}">
+          <div class="qi-info">
+            <div class="qi-pos" style="background:rgba(212,175,55,0.18);color:var(--gold)">🔧</div>
+            <div class="qi-text">
+              <div class="qi-name">${escapeHtml(w.name)}${isMine ? '<span class="qi-you">(انت)</span>' : ''}</div>
+              <div class="qi-role">${escapeHtml(w.role)}</div>
+              <div class="qi-since">من ${timeAgo(b.since)}</div>
+            </div>
+          </div>
+          ${isMine ? `<button class="act btn-back" onclick="finishJob()">✅ خلصت</button>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  const awayList = document.getElementById('awayList');
+  const away = state.away || [];
+  document.getElementById('countAway').textContent = away.length;
+  if(away.length === 0){
+    awayList.innerHTML = `<div class="empty-state"><span class="es-icon">👍</span>مفيش حد خارج المحل حاليًا</div>`;
+  } else {
+    awayList.innerHTML = away.map(a => {
+      const w = state.workers[a.id];
+      if(!w) return '';
+      const isMine = a.id === myId;
+      return `
+        <div class="queue-item ${isMine ? 'mine-item' : ''}">
+          <div class="qi-info">
+            <div class="qi-pos" style="background:var(--spark-dim);color:var(--spark)">🚗</div>
+            <div class="qi-text">
+              <div class="qi-name">${escapeHtml(w.name)}${isMine ? '<span class="qi-you">(انت)</span>' : ''}</div>
+              <div class="qi-role">${escapeHtml(w.role)}</div>
+              <div class="qi-since">${timeAgo(a.since)}</div>
+              ${a.reason ? `<div class="qi-reason">📝 ${escapeHtml(a.reason)}</div>` : ''}
+            </div>
+          </div>
+          ${isMine ? `<button class="act btn-back" onclick="comeBack()">✅ رجعت متاح</button>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  const convoChips = document.getElementById('convoChips');
+  const allIdsForChips = Object.keys(state.workers).filter(id => id !== myId);
+  const groupUnread = (state.chat||[]).length > (seenCounts['group']||0);
+  convoChips.innerHTML =
+    `<div class="convo-chip ${currentConvo==='group'?'active':''}" onclick="setConvo('group')">
+       <span class="cc-dot ${currentConvo!=='group' && groupUnread ? 'show':''}"></span>👥 المجموعة
+     </div>` +
+    allIdsForChips.map(id => {
+      const key = [myId,id].sort().join('_');
+      const thread = (state.dms && state.dms[key]) || [];
+      const unread = thread.length > (seenCounts[key]||0);
+      return `<div class="convo-chip ${currentConvo===id?'active':''}" onclick="setConvo('${id}')">
+        <span class="cc-dot ${currentConvo!==id && unread ? 'show':''}"></span>${escapeHtml(state.workers[id].name)}
+      </div>`;
+    }).join('');
+
+  const chatBox = document.getElementById('chatBox');
+  let messages = [];
+  let threadKey = 'group';
+  if(currentConvo === 'group'){
+    messages = state.chat || [];
+  } else {
+    threadKey = [myId, currentConvo].sort().join('_');
+    messages = (state.dms && state.dms[threadKey]) || [];
+  }
+  seenCounts[threadKey] = messages.length;
+
+  const REACT_EMOJIS = ['👍','😂','🔥','❤️'];
+  if(messages.length === 0){
+    chatBox.innerHTML = `<div class="empty-state"><span class="es-icon">💬</span>مفيش رسايل لسه.</div>`;
+  } else {
+    chatBox.innerHTML = messages.slice(-50).map(m => {
+      const reactions = m.reactions || {};
+      const isMine = m.fromId === myId;
+      const reactBtns = REACT_EMOJIS.filter(e => reactions[e] > 0).map(e =>
+        `<button class="react-btn has-count" onclick="reactToMessage('${m.id}','${e}')">${e} ${reactions[e]}</button>`
+      ).join('');
+      return `
+      <div class="chat-msg ${isMine ? 'mine' : ''}">
+        <div class="cm-name">${escapeHtml(m.workerName)}</div>
+        <div class="cm-text">${escapeHtml(m.text)}</div>
+        <div class="cm-time">${fmtTime(m.time)}${isMine ? ' <span class="cm-tick">✓✓</span>' : ''}</div>
+        <div class="cm-reactions">
+          ${reactBtns}
+          <button class="react-btn" onclick="togglePicker('${m.id}')">+ رياكشن</button>
+        </div>
+        <div class="react-pick" id="pick-${m.id}">
+          ${REACT_EMOJIS.map(e => `<button onclick="reactToMessage('${m.id}','${e}')">${e}</button>`).join('')}
+        </div>
+      </div>`;
+    }).join('');
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  const anyUnread = groupUnread || allIdsForChips.some(id => {
+    const key = [myId,id].sort().join('_');
+    return ((state.dms && state.dms[key]) || []).length > (seenCounts[key]||0);
+  });
+  if(currentTab !== 'chat' && anyUnread){
+    document.getElementById('chatDot').classList.add('show');
+  }
+
+  const statsList = document.getElementById('statsList');
+  const log = state.log || [];
+  const todayLog = log.filter(l => isToday(l.time));
+  const ids = Object.keys(state.workers);
+  if(ids.length === 0){
+    statsList.innerHTML = `<div class="empty-state">لسه مفيش فنيين مضافين.</div>`;
+  } else {
+    statsList.innerHTML = ids.map(id => {
+      const w = state.workers[id];
+      const takes = todayLog.filter(l => l.action === 'took' && l.workerName === w.name).length;
+      const leaves = todayLog.filter(l => l.action === 'left' && l.workerName === w.name).length;
+      return `
+        <div class="stat-row">
+          <span>${escapeHtml(w.name)}${id===myId?' <span class="qi-you">(انت)</span>':''}</span>
+          <span class="stat-nums">
+            <span class="n-take">✅ ${takes}</span>
+            <span class="n-leave">🚗 ${leaves}</span>
+          </span>
+        </div>`;
+    }).join('');
+  }
+
+  const logList = document.getElementById('logList');
+  if(log.length === 0){
+    logList.innerHTML = `<div class="empty-state">مفيش حركات مسجلة لسه.</div>`;
+  } else {
+    logList.innerHTML = log.slice(0, 40).map(l => {
+      const meta = ACTION_LABELS[l.action] || { text: l.action, tag: 'tag-add' };
+      return `
+        <div class="log-item">
+          <span class="log-time">${fmtTime(l.time)}</span> —
+          <b>${escapeHtml(l.workerName || '')}</b>
+          <span class="log-tag ${meta.tag}">${meta.text}</span>
+          ${l.reason ? `<div class="qi-reason">📝 ${escapeHtml(l.reason)}</div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
+  const manageList = document.getElementById('workersManageList');
+  if(ids.length === 0){
+    manageList.innerHTML = `<div class="empty-state">لسه مفيش فنيين مضافين.</div>`;
+  } else {
+    manageList.innerHTML = ids.map(id => {
+      const w = state.workers[id];
+      const inQueue = state.order.includes(id);
+      const dot = inQueue ? 'dot-green' : 'dot-orange';
+      return `
+        <div class="worker-row">
+          <span><span class="status-dot ${dot}"></span>${escapeHtml(w.name)} — ${escapeHtml(w.role)}</span>
+          <span style="display:flex;gap:6px">
+            <button class="act btn-back" style="padding:6px 10px;font-size:0.72rem" onclick="resetPassword('${id}')">🔑 كلمة مرور جديدة</button>
+            <button class="act btn-del" onclick="removeWorker('${id}')">حذف</button>
+          </span>
+        </div>`;
+    }).join('');
+  }
+}
+
+async function addWorker(){
+  const nameInput = document.getElementById('newName');
+  const roleInput = document.getElementById('newRole');
+  const phoneInput = document.getElementById('newPhone');
+  const name = nameInput.value.trim();
+  const role = roleInput.value;
+  const phone = phoneInput.value.trim();
+  if(!name){ showToast('اكتب اسم الفني أول', true); return; }
+  if(!phone){ showToast('اكتب رقم جواله', true); return; }
+  const data = await doAdminAction({ type: "add", name, role, phone });
+  if(!data) return;
+  nameInput.value=''; phoneInput.value='';
+  alert(`تمت إضافة "${name}" ✅\n\nكلمة المرور: ${data.generatedPassword}\nرقم الجوال: ${phone}\n\nسجّلهم وابلّغه بيهم عشان يسجل دخول أول مرة.`);
+}
+
+async function removeWorker(id){
+  const w = state.workers[id];
+  if(!w) return;
+  if(!confirm(`متأكد تحذف "${w.name}" نهائيًا من النظام؟`)) return;
+  await doAdminAction({ type: "remove", id });
+  showToast('تم الحذف');
+}
+
+async function resetPassword(id){
+  const w = state.workers[id];
+  if(!w) return;
+  if(!confirm(`متأكد تعمل كلمة مرور جديدة لـ "${w.name}"؟ هتلغي تسجيل دخوله الحالي.`)) return;
+  const data = await doAdminAction({ type: "reset_password", id });
+  if(!data) return;
+  alert(`كلمة المرور الجديدة لـ "${w.name}": ${data.generatedPassword}\n\nبلّغه بيها عشان يسجل دخول تاني.`);
+}
+
+async function takeCustomer(){
+  haptic();
+  const ok = await doAction({ type: "take" });
+  if(ok) showToast(`بدأت الشغل مع الزبون`);
+}
+
+async function finishJob(){
+  haptic();
+  const ok = await doAction({ type: "finish" });
+  if(ok){
+    showToast(`خلصت، وانضممت آخر الدور`);
+    confettiBurst();
+    haptic([15,40,15]);
+  }
+}
+
+function leaveForPersonal(){
+  haptic();
+  document.querySelectorAll('#reasonChips .chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('reasonCustomInput').value = '';
+  document.getElementById('reasonModal').classList.add('open');
+}
+function closeReasonModal(){
+  document.getElementById('reasonModal').classList.remove('open');
+}
+document.getElementById('reasonChips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  haptic(10);
+  document.querySelectorAll('#reasonChips .chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  document.getElementById('reasonCustomInput').value = chip.dataset.val;
+});
+async function confirmReasonModal(){
+  const reason = document.getElementById('reasonCustomInput').value.trim();
+  if(!reason){ showToast('اختار سبب أو اكتبه', true); return; }
+  document.getElementById('reasonModal').classList.remove('open');
+  const ok = await doAction({ type: "leave", reason });
+  if(ok) showToast(`خرجت لعميلك`);
+}
+
+async function comeBack(){
+  haptic();
+  const ok = await doAction({ type: "return" });
+  if(ok) showToast(`رجعت، وانضممت آخر الدور`);
+}
+
+async function sendChat(){
+  haptic();
+  const textInput = document.getElementById('chatText');
+  const text = textInput.value.trim();
+  if(!text){ showToast('اكتب رسالة الأول', true); return; }
+  const to = currentConvo === 'group' ? 'group' : currentConvo;
+  const ok = await doAction({ type: "chat", text, to });
+  if(ok) textInput.value = '';
+}
+document.getElementById('chatText').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter') sendChat();
+});
+
+function togglePicker(msgId){
+  haptic(10);
+  const el = document.getElementById('pick-'+msgId);
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.react-pick.open').forEach(p => p.classList.remove('open'));
+  if(!wasOpen) el.classList.add('open');
+}
+async function reactToMessage(msgId, emoji){
+  haptic(10);
+  document.querySelectorAll('.react-pick.open').forEach(p => p.classList.remove('open'));
+  const thread = currentConvo === 'group' ? 'group' : [session.workerId, currentConvo].sort().join('_');
+  await doAction({ type: "react", msgId, emoji, thread });
+}
+
+loadSession();
+if(session && session.token){
+  showLoggedInApp();
+  loadState();
+  setInterval(() => { if(!busy) loadState(); }, 4000);
+} else {
+  document.getElementById('loginScreen').classList.remove('hidden');
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+</script>
+
+</body>
+</html>
