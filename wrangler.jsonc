@@ -1,0 +1,15 @@
+{
+  "name": "fanni-queue",
+  "compatibility_date": "2026-01-01",
+  "assets": {
+    "directory": "./",
+    "binding": "ASSETS"
+  },
+  "main": "worker.js",
+  "kv_namespaces": [
+    {
+      "binding": "QUEUE_KV",
+      "id": "ضع_هنا_الـ_ID_اللي_هتاخده_من_كلاود_فلير"
+    }
+  ]
+}
